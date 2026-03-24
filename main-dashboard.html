@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+
+    <!-- NAVBAR -->
+    <div class="navbar">
+        <div class="logo">📚 Study Planner</div>
+        <div>
+            <button onclick="toggleDarkMode()">🌙</button>
+            <button onclick="goPlanner()">Planner</button>
+            <button onclick="goProfile()">Profile</button>
+            <button onclick="logout()">Logout</button>
+        </div>
+    </div>
+
+    <div class="container">
+
+        <h1 id="welcome"></h1>
+
+        <!-- STATS -->
+        <div class="cards">
+            <div class="card">
+                <h3>Total Tasks</h3>
+                <p id="total"></p>
+            </div>
+            <div class="card">
+                <h3>Completed</h3>
+                <p id="completed"></p>
+            </div>
+            <div class="card">
+                <h3>Pending</h3>
+                <p id="pending"></p>
+            </div>
+        </div>
+
+        <!-- PROGRESS -->
+        <div class="progressBox">
+            <h3>Progress</h3>
+            <div class="progressBar">
+                <div id="progressFill"></div>
+            </div>
+            <p id="progressText"></p>
+        </div>
+
+        <!-- TODAY TASKS -->
+        <div class="tasksBox">
+            <h3>Today's Tasks</h3>
+            <div id="todayTasks"></div>
+        </div>
+
+    </div>
+
+    <script src="dashboard.js"></script>
+</body>
+</html>
