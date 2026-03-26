@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Profile</title>
+<link rel="stylesheet" href="dashboard.css">
+</head>
+
+<body>
+
+<div class="navbar">
+
+<div class="logo">📚 Study Planner</div>
+
+<div class="navButtons">
+<button onclick="goPlanner()">Planner</button>
+<button onclick="goDashboard()">Dashboard</button>
+<button onclick="logout()">Logout</button>
+</div>
+
+</div>
+
+<div class="container">
+
+<h1>Your Profile</h1>
+
+<div class="profileCard">
+
+<h2 id="profileName"></h2>
+<p id="profileEmail"></p>
+
+<h3>Your Stats</h3>
+
+<p>Total Tasks: <span id="totalTasks"></span></p>
+<p>Completed Tasks: <span id="completedTasks"></span></p>
+<p>Pending Tasks: <span id="pendingTasks"></span></p>
+
+</div>
+
+</div>
+
+<script src="profile.js"></script>
+
+</body>
+</html>

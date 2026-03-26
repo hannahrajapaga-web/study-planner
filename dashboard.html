@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Dashboard</title>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div id="notification" style="
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: #4f46e5;
+    color: white;
+    padding: 12px 20px;
+    border-radius: 8px;
+    display: none;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    z-index: 1000;
+">
+</div>
+    <div class="navbar">
+    <div class="nav-left">📚 Study Planner</div>
+    <div class="nav-right">
+        <button onclick="toggleDarkMode()">🌙</button>
+        <button onclick="goDashboard()">Dashboard</button>
+        <button onclick="goProfile()">Profile</button>
+        <button onclick="logout()">Logout</button>
+    </div>
+</div>
+<div id="toastContainer"></div>
+<div class="container">
+
+<h1 id="welcome"></h1>
+
+<div class="formBox">
+<input id="subject" placeholder="Subject">
+<input id="task" placeholder="Task">
+<input id="deadline" type="date">
+<button onclick="addTask()">Add Task</button>
+</div>
+
+<div class="progressBox">
+
+<h3>Your Progress</h3>
+
+<div class="progressBar">
+<div id="progressFill"></div>
+</div>
+
+<p id="progressText"></p>
+<p id="progressQuote"></p>
+
+</div>
+<!-- 🔍 SEARCH + FILTER -->
+<div class="searchRow">
+    <input id="search" placeholder="Search tasks..." oninput="loadTasks()">
+
+    <select id="filter" onchange="loadTasks()">
+        <option value="all">All</option>
+        <option value="pending">Pending</option>
+        <option value="completed">Completed</option>
+    </select>
+</div>
+<!-- 🎯 PRIORITY -->
+
+<!-- 📊 DASHBOARD STATS -->
+
+<div id="taskList"></div>
+
+</div>
+<div id="deletePopup" class="popupOverlay">
+
+<div class="popupBox">
+
+<h3>Delete Task</h3>
+
+<p>Are you sure you want to delete this task?</p>
+
+<div class="popupButtons">
+
+<button onclick="closeDeletePopup()">Cancel</button>
+
+<button class="deleteBtn" onclick="confirmDelete()">Delete</button>
+
+</div>
+
+</div>
+
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>
