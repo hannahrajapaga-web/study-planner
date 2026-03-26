@@ -9,8 +9,8 @@ import com.example.demo.model.StudyTask;
 import com.example.demo.service.StudyTaskService;
 
 @RestController
+@CrossOrigin(origins = "*")
 @RequestMapping("/tasks")
-@CrossOrigin
 public class StudyTaskController {
 
     @Autowired
