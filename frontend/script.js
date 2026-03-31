@@ -1,22 +1,52 @@
+// ===============================
+// GLOBAL VARIABLES
+// ===============================
 let user = JSON.parse(localStorage.getItem("user"));
 let remindersShown = false;
-if(localStorage.getItem("darkMode") === "true"){
-document.body.classList.add("dark");
-}
-
-if(!user){
-    window.location = "index.html";
-}
-
-document.getElementById("welcome").innerText = "Welcome, " + user.name;
+let deleteTaskId = null;
 
 const API = "https://study-planner-467z.onrender.com/tasks";
+
+
+// ===============================
+// PAGE LOAD
+// ===============================
+window.onload = function(){
+
+    // Dark mode load
+    if(localStorage.getItem("darkMode") === "true"){
+        document.body.classList.add("dark");
+    }
+
+    // Check login
+    if(!user){
+        window.location = "index.html";
+        return;
+    }
+
+    // Welcome message
+    const welcome = document.getElementById("welcome");
+    if(welcome){
+        welcome.innerText = "Welcome, " + user.name;
+    }
+
+    loadTasks();
+};
+
+
+// ===============================
 // LOAD TASKS
+// ===============================
 function loadTasks(){
 
     fetch(API + "/" + user.id)
-    .then(res=>res.json())
-    .then(data=>{
+    .then(res => {
+        if(!res.ok){
+            throw new Error("Server error");
+        }
+        return res.json();
+    })
+    .then(data => {
 
         let search = document.getElementById("search").value.toLowerCase();
         let filter = document.getElementById("filter").value;
@@ -24,9 +54,12 @@ function loadTasks(){
         let today = new Date();
         today.setHours(0,0,0,0);
 
-        // FILTER + SEARCH
-        let tasks = data.filter(t=>{
-            let matchSearch = t.task.toLowerCase().includes(search) || t.subject.toLowerCase().includes(search);
+        // Filter + search
+        let tasks = data.filter(t => {
+
+            let matchSearch =
+                t.task.toLowerCase().includes(search) ||
+                t.subject.toLowerCase().includes(search);
 
             let matchFilter =
                 filter === "all" ||
@@ -36,28 +69,31 @@ function loadTasks(){
             return matchSearch && matchFilter;
         });
 
-        // SMART SORT
+        // Smart sort
         tasks.sort((a,b)=>{
+
             let da = new Date(a.deadline);
             let db = new Date(b.deadline);
 
-            if(a.completed !== b.completed) return a.completed - b.completed;
+            if(a.completed !== b.completed){
+                return a.completed - b.completed;
+            }
 
             return da - db;
         });
 
         let list = document.getElementById("taskList");
-        list.innerHTML="";
+        list.innerHTML = "";
 
-        tasks.forEach(t=>{
+        tasks.forEach(t => {
 
             let deadline = new Date(t.deadline);
             deadline.setHours(0,0,0,0);
 
             let diffDays = Math.ceil((deadline - today)/(1000*60*60*24));
 
-            let card=document.createElement("div");
-            card.className="taskCard";
+            let card = document.createElement("div");
+            card.className = "taskCard";
 
             // Deadline color
             if(diffDays < 0){
@@ -71,14 +107,11 @@ function loadTasks(){
             }
 
             if(t.completed){
-                card.style.opacity="0.6";
+                card.style.opacity = "0.6";
             }
 
-           card.innerHTML = `
-
-<div class="taskSubject">
-    ${t.subject}
-</div>
+            card.innerHTML = `
+<div class="taskSubject">${t.subject}</div>
 
 <div class="taskMiddle">
     <div class="taskText">${t.task}</div>
@@ -87,7 +120,7 @@ function loadTasks(){
 
 <div class="taskButtons">
 
-<button onclick="editTask(${t.id},'${t.subject}','${t.task}','${t.deadline}')">
+<button onclick='editTask(${t.id},"${t.subject}","${t.task}","${t.deadline}")'>
 Edit
 </button>
 
@@ -101,26 +134,27 @@ Delete
 </button>
 
 </div>
-
 `;
 
             list.appendChild(card);
         });
+
+        // Progress calculation
         let total = data.length;
-let completed = data.filter(t => t.completed).length;
+        let completed = data.filter(t => t.completed).length;
 
-let percent = 0;
+        let percent = 0;
 
-if(total > 0){
-percent = Math.round((completed / total) * 100);
-}
+        if(total > 0){
+            percent = Math.round((completed / total) * 100);
+        }
 
-document.getElementById("progressFill").style.width = percent + "%";
-document.getElementById("progressText").innerText = percent + "% completed";
+        document.getElementById("progressFill").style.width = percent + "%";
+        document.getElementById("progressText").innerText = percent + "% completed";
 
-updateMotivation(percent);
+        updateMotivation(percent);
 
-        // SHOW REMINDERS ONLY ON FIRST LOAD
+        // Reminder notifications
         if(!remindersShown){
             setTimeout(()=>{
                 checkReminders(data);
@@ -128,18 +162,16 @@ updateMotivation(percent);
             },500);
         }
 
+    })
+    .catch(err=>{
+        console.error("Task loading error:",err);
     });
 }
-function confirmDelete(id){
-
-if(confirm("Delete this task?")){
-deleteTask(id);
-}
-
-}
 
 
+// ===============================
 // ADD TASK
+// ===============================
 function addTask(){
 
     let subjectVal = document.getElementById("subject").value.trim();
@@ -163,11 +195,10 @@ function addTask(){
         })
     })
     .then(res => res.json())
-    .then(() => {
-
-        document.getElementById("subject").value = "";
-        document.getElementById("task").value = "";
-        document.getElementById("deadline").value = "";
+    .then(()=>{
+        document.getElementById("subject").value="";
+        document.getElementById("task").value="";
+        document.getElementById("deadline").value="";
 
         loadTasks();
         showToast("Task added successfully ✅","green");
@@ -175,7 +206,9 @@ function addTask(){
 }
 
 
-// DELETE
+// ===============================
+// DELETE TASK
+// ===============================
 function deleteTask(id){
 
     fetch(API+"/"+id,{method:"DELETE"})
@@ -183,11 +216,12 @@ function deleteTask(id){
         loadTasks();
         showToast("Task deleted 🗑️","red");
     });
-
 }
 
 
-// COMPLETE
+// ===============================
+// COMPLETE TASK
+// ===============================
 function completeTask(id){
 
     fetch(API+"/"+id+"/complete",{method:"PUT"})
@@ -195,11 +229,12 @@ function completeTask(id){
         loadTasks();
         showToast("Task completed 🎉","orange");
     });
-
 }
 
 
-// EDIT
+// ===============================
+// EDIT TASK
+// ===============================
 function editTask(id,oldSub,oldTask,oldDate){
 
     let subject = prompt("Edit subject",oldSub);
@@ -215,79 +250,42 @@ function editTask(id,oldSub,oldTask,oldDate){
         loadTasks();
         showToast("Task updated ✏️","#4f46e5");
     });
-
 }
+
+
+// ===============================
+// MOTIVATION QUOTES
+// ===============================
 function updateMotivation(percent){
 
 let quote="";
 
-if(percent == 0){
+if(percent === 0){
 quote="Start small. Every task counts 🚀";
 }
-
 else if(percent < 30){
 quote="Good start! Keep going 💪";
 }
-
 else if(percent < 60){
 quote="You're making solid progress 📚";
 }
-
 else if(percent < 90){
 quote="Almost there! Stay focused 🔥";
 }
-
-else if(percent == 100){
+else if(percent === 100){
 quote="Amazing work! All tasks completed 🎉";
 }
-
 else{
 quote="Just a few more to finish ⭐";
 }
 
 document.getElementById("progressQuote").innerText = quote;
-
 }
 
 
-// LOGOUT
-function logout(){
-    localStorage.removeItem("user");
-    window.location="index.html";
-}
-
-
-// DASHBOARD
-function goDashboard(){
-    window.location = "main-dashboard.html";
-}
-
-
-// TOAST SYSTEM
-function showToast(message,color="#333"){
-
-    let container = document.getElementById("toastContainer");
-
-    let toast=document.createElement("div");
-    toast.className="toast";
-    toast.innerText=message;
-    toast.style.background=color;
-
-    container.appendChild(toast);
-
-    setTimeout(()=>{
-        toast.classList.add("show");
-    },100);
-
-    setTimeout(()=>{
-        toast.classList.remove("show");
-        setTimeout(()=>toast.remove(),400);
-    },3000);
-
-}
-
-
+// ===============================
 // REMINDERS
+// ===============================
 function checkReminders(tasks){
 
     let today=new Date();
@@ -325,11 +323,55 @@ function checkReminders(tasks){
         }
 
     });
-
 }
 
 
+// ===============================
+// TOAST NOTIFICATIONS
+// ===============================
+function showToast(message,color="#333"){
+
+    let container=document.getElementById("toastContainer");
+
+    let toast=document.createElement("div");
+    toast.className="toast";
+    toast.innerText=message;
+    toast.style.background=color;
+
+    container.appendChild(toast);
+
+    setTimeout(()=>{
+        toast.classList.add("show");
+    },100);
+
+    setTimeout(()=>{
+        toast.classList.remove("show");
+        setTimeout(()=>toast.remove(),400);
+    },3000);
+}
+
+
+// ===============================
+// DELETE POPUP
+// ===============================
+function openDeletePopup(id){
+    deleteTaskId=id;
+    document.getElementById("deletePopup").classList.add("show");
+}
+
+function closeDeletePopup(){
+    document.getElementById("deletePopup").classList.remove("show");
+}
+
+function confirmDelete(){
+    deleteTask(deleteTaskId);
+    closeDeletePopup();
+}
+
+
+// ===============================
 // DARK MODE
+// ===============================
 function toggleDarkMode(){
 
 document.body.classList.toggle("dark");
@@ -343,41 +385,19 @@ localStorage.setItem("darkMode","false");
 
 }
 
-// LOAD PAGE
-window.onload=()=>{
 
-    if(localStorage.getItem("dark")==="true"){
-        document.body.classList.add("dark");
-    }
-
-    loadTasks();
-};
-let deleteTaskId = null;
-
-
-function openDeletePopup(id){
-
-deleteTaskId = id;
-
-document.getElementById("deletePopup").classList.add("show");
-
+// ===============================
+// NAVIGATION
+// ===============================
+function logout(){
+localStorage.removeItem("user");
+window.location="index.html";
 }
 
-
-function closeDeletePopup(){
-
-document.getElementById("deletePopup").classList.remove("show");
-
+function goDashboard(){
+window.location="main-dashboard.html";
 }
 
-
-function confirmDelete(){
-
-deleteTask(deleteTaskId);
-
-closeDeletePopup();
-
-}
 function goProfile(){
-window.location = "profile.html";
+window.location="profile.html";
 }

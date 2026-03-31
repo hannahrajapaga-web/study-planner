@@ -60,9 +60,13 @@ button {
 </div>
 
 <script>
-const URL = "http://localhost:9090/users";
+// Backend URLs
+const BASE_URL = "https://study-planner-467z.onrender.com";
+const TASKS_URL = BASE_URL + "/tasks";
+const LOGIN_URL = BASE_URL + "/users/login";
+const SIGNUP_URL = BASE_URL + "/users/signup";
 
-// SWITCH
+// SWITCH BETWEEN LOGIN AND SIGNUP
 function showSignup(){
     loginBox.style.display="none";
     signupBox.style.display="block";
@@ -72,13 +76,13 @@ function showLogin(){
     loginBox.style.display="block";
 }
 
-// LOGIN
+// LOGIN FUNCTION
 async function login(){
     const email = document.getElementById("email").value;
     const password = document.getElementById("password").value;
 
     try{
-        const res = await fetch(URL + "/login",{
+        const res = await fetch(LOGIN_URL, {   // Correct URL
             method:"POST",
             headers:{"Content-Type":"application/json"},
             body:JSON.stringify({email,password})
@@ -98,14 +102,14 @@ async function login(){
     }
 }
 
-// SIGNUP
+// SIGNUP FUNCTION
 async function signup(){
     const name = document.getElementById("name").value;
     const email = document.getElementById("signupEmail").value;
     const password = document.getElementById("signupPassword").value;
 
     try{
-        const res = await fetch(URL + "/signup",{
+        const res = await fetch(SIGNUP_URL, {  // Correct URL
             method:"POST",
             headers:{"Content-Type":"application/json"},
             body:JSON.stringify({name,email,password})
