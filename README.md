@@ -67,7 +67,6 @@ study-planner-server/
 │               └── StudyPlannerServerApplication.java
 ├── Dockerfile
 └── pom.xml
----
 
 ## 🔌 API Endpoints
 
