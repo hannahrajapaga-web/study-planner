@@ -39,7 +39,6 @@
 
 ## 📁 Project Structure
 
-```
 📦 study-planner-server
  ┣ 📂 src/main/java/com/example/studyplanner
  ┃ ┣ 📂 config
