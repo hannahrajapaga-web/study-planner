@@ -38,7 +38,7 @@
 ---
 
 ## 📁 Project Structure
-
+```
 📦 study-planner-server
  ┣ 📂 src/main/java/com/example/studyplanner
  ┃ ┣ 📂 config
@@ -63,7 +63,7 @@
  ┃ ┗ 📜 StudyPlannerServerApplication.java
  ┣ 📜 Dockerfile
  ┗ 📜 pom.xml
-
+```
 ## 🔌 API Endpoints
 
 ### Authentication
