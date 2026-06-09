@@ -67,6 +67,7 @@ study-planner-server/
 │               └── StudyPlannerServerApplication.java
 ├── Dockerfile
 └── pom.xml
+---
 
 ## 🔌 API Endpoints
 
@@ -189,3 +190,5 @@ GitHub: [@hannahrajapaga-web](https://github.com/hannahrajapaga-web)
 ## 📄 License
 
 This project is open source and available under the [MIT License](LICENSE).
+
+en source and available under the [MIT License](LICENSE).
