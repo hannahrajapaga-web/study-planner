@@ -38,27 +38,35 @@
 ---
 
 ## 📁 Project Structure
-src/main/java/com/example/studyplanner/
-├── config/
-│   ├── JwtAuthenticationFilter.java
-│   ├── JwtTokenProvider.java
-│   └── SecurityConfig.java
-├── controller/
-│   ├── AuthController.java
-│   ├── TaskController.java
-│   ├── SubjectController.java
-│   ├── StudyScheduleController.java
-│   ├── NotificationController.java
-│   └── UserController.java
-├── model/
-│   ├── User.java
-│   ├── Task.java
-│   ├── Subject.java
-│   ├── StudySchedule.java
-│   └── Notification.java
-├── repository/
-├── service/
-└── StudyPlannerServerApplication.java
+
+```
+study-planner-server/
+├── src/
+│   └── main/
+│       └── java/
+│           └── com/example/studyplanner/
+│               ├── config/
+│               │   ├── JwtAuthenticationFilter.java
+│               │   ├── JwtTokenProvider.java
+│               │   └── SecurityConfig.java
+│               ├── controller/
+│               │   ├── AuthController.java
+│               │   ├── NotificationController.java
+│               │   ├── StudyScheduleController.java
+│               │   ├── SubjectController.java
+│               │   ├── TaskController.java
+│               │   └── UserController.java
+│               ├── model/
+│               │   ├── Notification.java
+│               │   ├── StudySchedule.java
+│               │   ├── Subject.java
+│               │   ├── Task.java
+│               │   └── User.java
+│               ├── repository/
+│               ├── service/
+│               └── StudyPlannerServerApplication.java
+├── Dockerfile
+└── pom.xml
 ---
 
 ## 🔌 API Endpoints
